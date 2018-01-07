@@ -1,0 +1,28 @@
+logging:
+  level:
+    root: INFO
+    de.dhuning: DEBUG
+server.port: ${PORT:18081}
+
+spring.h2.console.enabled: true
+# Expose all endpoints
+management.endpoints.web.expose: "*"
+---
+spring:
+  profiles: local
+  datasource:
+      url: jdbc:mysql://localhost:3306/lock?useSSL=false
+      username: root
+      password: root
+      driverClassName: com.mysql.jdbc.Driver
+  h2:
+    console:
+      enabled: false
+---
+spring:
+  profiles: docker
+  datasource:
+    url: jdbc:mysql://iot-mysql:3306/lock?useSSL=false
+    username: root
+    password: root
+    driverClassName: com.mysql.jdbc.Driver
