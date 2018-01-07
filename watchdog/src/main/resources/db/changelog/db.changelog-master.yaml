@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1.0.0
+      author: Dennis Huning <huningd@gmail.com>
+      comment: |
+        Create base table.
+      changes:
+            - sqlFile:
+                  path: sql/create_base_table.sql
+                  relativeToChangelogFile: true
+            - tagDatabase:
+                  tag: 1.0.0
