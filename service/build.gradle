@@ -1,0 +1,28 @@
+description = "IoT :: Shadow :: Service"
+
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'com.palantir.docker'
+
+dependencies {
+    compile project(":api")
+
+    compile("org.jetbrains.kotlin:kotlin-stdlib-jre8")
+    compile("org.jetbrains.kotlin:kotlin-reflect")
+
+    compile('org.springframework.boot:spring-boot-starter-data-mongodb-reactive')
+    compile('org.springframework.boot:spring-boot-starter-webflux')
+    compile('org.springframework.boot:spring-boot-starter-actuator')
+    runtime('de.flapdoodle.embed:de.flapdoodle.embed.mongo')
+
+    compile("com.fasterxml.jackson.module:jackson-module-kotlin")
+    compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+docker {
+    name "${project.group}/iot-${jar.baseName}"
+    files jar.archivePath
+    buildArgs(['JAR_FILE': "${jar.archiveName}"])
+}

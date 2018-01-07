@@ -1,0 +1,68 @@
+version: '3'
+
+networks:
+  app-tier:
+    driver: bridge
+
+services:
+# ---------------
+# iot-mysql
+# ---------------
+  iot-mysql:
+    hostname: iot-mysql
+    labels:
+      name: "iot-mysql"
+    build: ./iot-mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - app-tier
+# ---------------
+# iot-service
+# ---------------
+  iot-service:
+    labels:
+      name: "iot-service"
+    image: de.dhuning/iot-service:latest
+    environment:
+      - PROFILES=docker
+    ports:
+      - "18080:18080"
+    networks:
+      - app-tier
+# ---------------
+# iot-watchdog-0
+# ---------------
+  iot-watchdog-0:
+    labels:
+      name: "iot-watchdog-0"
+    command: sh -c './wait-for-it.sh iot-mysql:3306'
+    image: de.dhuning/iot-watchdog:latest
+    environment:
+      - PROFILES=docker
+    ports:
+      - "18090:18081"
+    links:
+      - iot-mysql
+    networks:
+      - app-tier
+    depends_on:
+      - "iot-mysql"
+# ---------------
+# iot-watchdog-1
+# ---------------
+  iot-watchdog-1:
+    labels:
+      name: "iot-watchdog-1"
+    command: sh -c './wait-for-it.sh iot-mysql:3306'
+    image: de.dhuning/iot-watchdog:latest
+    environment:
+      - PROFILES=docker
+    ports:
+      - "18091:18081"
+    links:
+      - iot-mysql
+    networks:
+      - app-tier
+    depends_on:
+      - "iot-mysql"

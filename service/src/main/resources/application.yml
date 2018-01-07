@@ -1,0 +1,10 @@
+logging:
+  level:
+    root: INFO
+    de.dhuning: DEBUG
+
+server:
+  port: ${PORT:18080}
+
+# Expose all endpoints
+management.endpoints.web.expose: "*"

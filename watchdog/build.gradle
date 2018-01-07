@@ -1,0 +1,31 @@
+description = "IoT :: Shadow :: Watchdog"
+// Based on https://dzone.com/articles/implementing-scheduler-lock
+
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'com.palantir.docker'
+
+dependencies {
+    // Spring libs
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile("org.springframework.boot:spring-boot-devtools")
+    compile('org.springframework.boot:spring-boot-starter-actuator')
+    compile('net.javacrumbs.shedlock:shedlock-spring:0.17.0')
+    compile('net.javacrumbs.shedlock:shedlock-provider-jdbc-template:0.17.0')
+
+    compile("org.liquibase:liquibase-core")
+
+    // H2 driver
+//    runtime("com.h2database:h2")
+    // MySQL libs
+    runtime("mysql:mysql-connector-java")
+
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+docker {
+    name "${project.group}/iot-${jar.baseName}"
+    files jar.archivePath
+    buildArgs(['JAR_FILE': "${jar.archiveName}"])
+}
